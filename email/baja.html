@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Baja de comunicaciones | Gloria Palace Amadores</title>
+<style>
+  body{margin:0;min-height:100svh;display:grid;place-items:center;background:#0C3E50;color:#062733;font:1rem/1.55 Manrope,Arial,sans-serif;padding:1rem}
+  main{width:min(30rem,100%);background:#F5F2EC;border-radius:18px;padding:1.8rem 1.6rem;box-sizing:border-box}
+  h1{margin:0 0 .6rem;font:1.7rem Marcellus,Georgia,serif;color:#0C3E50}
+  label{display:block;margin:.9rem 0 .3rem;font-weight:600}
+  input[type=email]{width:100%;box-sizing:border-box;padding:.75rem;border:1px solid #8A7B6C;border-radius:10px;font:inherit}
+  fieldset{border:0;padding:0;margin:.9rem 0}
+  button{width:100%;min-height:46px;border:0;border-radius:999px;background:#0C3E50;color:#fff;font-weight:600;font-size:1rem;font-family:inherit;cursor:pointer;margin-top:.6rem}
+  a{color:#0C3E50}.ok{background:#CFE7EA;border-radius:12px;padding:1rem}
+</style></head>
+<body><main>
+  <h1>Darme de baja</h1>
+  <form id="f">
+    <p>Confirma el correo con el que quieres dejar de recibir nuestras novedades. No te enviaremos más mensajes comerciales.</p>
+    <label for="email">Correo electrónico</label>
+    <input type="email" id="email" name="email" required autocomplete="email">
+    <fieldset><legend>¿Por qué te das de baja? (opcional)</legend>
+      <label><input type="radio" name="motivo" value="demasiados"> Recibo demasiados correos</label>
+      <label><input type="radio" name="motivo" value="irrelevante"> El contenido no me interesa</label>
+      <label><input type="radio" name="motivo" value="otro"> Otro motivo</label>
+    </fieldset>
+    <button type="submit">Confirmar baja</button>
+  </form>
+  <p class="ok" id="ok" hidden role="status"></p>
+  <p><a href="../index.html">Volver a la web del hotel</a></p>
+<script>
+  /* DEMOSTRACIÓN. Esta página no guarda nada: en un envío real, el formulario haría un POST a un
+     servidor (o a la plataforma de email) que marca el contacto como "baja" y deja de enviarle
+     campañas. La baja debe procesarse como máximo en 10 días laborables (guía de la AEPD/LSSI);
+     aquí se confirma al instante. */
+  var p = new URLSearchParams(location.search).get('email');
+  if (p && p.indexOf('{{') === -1) document.getElementById('email').value = p;
+  document.getElementById('f').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var m = document.getElementById('ok');
+    m.textContent = 'Listo. Hemos dado de baja ' + document.getElementById('email').value + '. Ya no recibirás más mensajes comerciales del hotel.';
+    m.hidden = false; this.hidden = true;
+  });
+</script>
+</main></body></html>
