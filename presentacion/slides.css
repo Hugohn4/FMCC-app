@@ -1,0 +1,13 @@
+*{box-sizing:border-box}html,body{height:100%;margin:0}body{background:#0C3E50;color:#F5F2EC;font:clamp(16px,1.7vw,22px)/1.5 Manrope,Arial,sans-serif;display:flex;flex-direction:column}
+main{flex:1;overflow:auto;padding:clamp(1rem,4vw,3.5rem) clamp(1rem,6vw,6rem)}
+.k{margin:0;color:#7FD3E3;font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:.7em}
+h1{font:clamp(1.8rem,4vw,3rem)/1.15 Marcellus,Georgia,serif;margin:.3rem 0 1.2rem;font-weight:400}
+h3{margin:.2rem 0 .4rem;color:#CFE7EA}ul,ol{padding-left:1.2em;margin:.4em 0}li{margin:.45em 0}
+table{border-collapse:collapse;width:100%;font-size:.82em}th{background:#062733;text-align:left}th,td{padding:.55em .8em;border:1px solid rgba(207,231,234,.25);vertical-align:top}
+pre{background:#062733;padding:1em;border-radius:10px;overflow:auto;font-size:.72em;line-height:1.45;margin:.5em 0}code{background:#062733;padding:.1em .35em;border-radius:5px;font-size:.88em}
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:2rem}@media(max-width:46rem){.dos{grid-template-columns:1fr}}
+.nota{background:rgba(30,155,180,.25);padding:.7em 1em;border-radius:10px;margin-top:1em}a{color:#7FD3E3}
+nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.7rem clamp(1rem,6vw,6rem);background:#062733;font-size:.8em}
+nav a{text-decoration:none;padding:.5em 1em;border-radius:999px;border:1px solid rgba(207,231,234,.4);color:#F5F2EC}nav a[aria-disabled=true]{opacity:.3;pointer-events:none}
+.portada{text-align:left}.portada h1{font-size:clamp(2rem,5vw,3.8rem)}
+.lista a{display:block;padding:.5em 0;text-decoration:none;color:#F5F2EC;border-bottom:1px solid rgba(207,231,234,.15)}.lista span{color:#7FD3E3;display:inline-block;width:2.2em}

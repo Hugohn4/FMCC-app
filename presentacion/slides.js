@@ -1,0 +1,1 @@
+document.addEventListener('keydown',function(e){var a=null;if(e.key==='ArrowRight'||e.key==='PageDown')a=document.getElementById('sig');if(e.key==='ArrowLeft'||e.key==='PageUp')a=document.getElementById('ant');if(e.key==='Home')a=document.getElementById('ini');if(a&&a.getAttribute('aria-disabled')!=='true')location.href=a.href;});
