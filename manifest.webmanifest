@@ -1,0 +1,23 @@
+{
+  "name": "Gloria Palace Amadores Thalasso & Hotel",
+  "short_name": "Gloria Amadores",
+  "description": "App del hotel: habitaciones, talaso, reserva y cómo llegar.",
+  "lang": "es",
+  "start_url": "./?origen=app",
+  "scope": "./",
+  "id": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0C3E50",
+  "theme_color": "#0C3E50",
+  "categories": ["travel", "lifestyle"],
+  "icons": [
+    { "src": "iconos/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "iconos/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "iconos/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Reservar", "url": "./?origen=app#reserva", "icons": [{ "src": "iconos/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Habitaciones", "url": "./?origen=app#habitaciones", "icons": [{ "src": "iconos/icon-192.png", "sizes": "192x192" }] }
+  ]
+}
