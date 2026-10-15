@@ -1,15 +1,19 @@
-/* Service worker de la web-app del Gloria Palace Amadores.
+/* Service worker de la web-app del Gloria Palace Amadores (v2).
    Estrategias:
-   - Esqueleto de la app (HTML, CSS, JS, manifiesto, iconos): se guarda al instalar.
-   - Navegación: red primero; si no hay conexión, se sirve la copia guardada u offline.html.
-   - Imágenes: caché primero (se guardan según se visitan; no se precargan los 27 MB).
-   - Audio (jazz.mp3) y peticiones con Range: siempre a la red (no se cachean). */
-const VERSION = 'gpa-v1';
+   - Esqueleto (HTML, CSS, JS, manifiesto): RED PRIMERO. Si hay conexión se descarga siempre la
+     versión más reciente (así los cambios llegan al móvil sin borrar nada); si no hay, se usa la copia.
+   - Navegación: red primero; sin conexión, copia guardada u offline.html.
+   - Imágenes: caché primero (se guardan según se visitan).
+   - Audio (jazz.mp3) y peticiones con Range: siempre a la red. */
+const VERSION = 'gpa-v2';
 const SHELL = ['./', 'index.html', 'app.css', 'app.js', 'manifest.webmanifest', 'offline.html',
   'iconos/icon-192.png', 'iconos/icon-512.png'];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  // cache: 'reload' obliga a saltarse la caché HTTP y guardar siempre la versión nueva
+  e.waitUntil(caches.open(VERSION)
+    .then(c => c.addAll(SHELL.map(u => new Request(u, { cache: 'reload' }))))
+    .then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', e => {
@@ -17,6 +21,13 @@ self.addEventListener('activate', e => {
     .then(ks => Promise.all(ks.filter(k => k !== VERSION).map(k => caches.delete(k))))
     .then(() => self.clients.claim()));
 });
+
+function redPrimero(req) {
+  return fetch(req, { cache: 'no-cache' }).then(r => {
+    if (r.ok) { const copia = r.clone(); caches.open(VERSION).then(c => c.put(req, copia)); }
+    return r;
+  }).catch(() => caches.match(req));
+}
 
 self.addEventListener('fetch', e => {
   const req = e.request;
@@ -39,8 +50,5 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  e.respondWith(caches.match(req).then(hit => hit || fetch(req).then(r => {
-    if (r.ok && url.origin === location.origin) { const copia = r.clone(); caches.open(VERSION).then(c => c.put(req, copia)); }
-    return r;
-  }).catch(() => hit)));
+  if (url.origin === location.origin) { e.respondWith(redPrimero(req)); return; }
 });

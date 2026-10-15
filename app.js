@@ -53,14 +53,17 @@
       (conBoton ? '<button class="si" type="button">Instalar</button>' : '<button class="si" type="button" data-ios>Cómo instalar</button>') +
       '<button class="no" type="button" aria-label="Cerrar">Ahora no</button></div>';
     var ios = banner.querySelector('[data-ios]');
-    if (ios) ios.onclick = function () { abrirIOS(); track('instalar_ios_pasos'); };
+    if (ios) ios.onclick = function () {
+      banner.hidden = true; sessionStorage.setItem('gpa_app_oculto', '1');   // desaparece el aviso y vuelven los botones
+      abrirIOS(); track('instalar_ios_pasos');
+    };
     banner.hidden = false;
     track('instalar_mostrado');
     banner.querySelector('.no').onclick = function () { banner.hidden = true; sessionStorage.setItem('gpa_app_oculto', '1'); };
     var si = banner.querySelector('.si');
-    if (si) si.onclick = function () {
-      if (!pedido) { banner.hidden = true; return; }
-      banner.hidden = true;
+    if (si && !ios) si.onclick = function () {
+      banner.hidden = true; sessionStorage.setItem('gpa_app_oculto', '1');
+      if (!pedido) return;
       pedido.prompt();
       pedido.userChoice.then(function (r) { track('instalar_' + r.outcome); pedido = null; });
     };
@@ -80,19 +83,38 @@
   }
 
   /* ---- Pasos para iPhone y iPad (Safari no permite instalar con un botón) ---- */
+  var esIPad = /ipad/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var SVG = {
+    compartir: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M7 11H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-1"/></svg>',
+    mas: '<svg class="mini" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>',
+    anadir: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3.5"/><path d="M12 8v8M8 12h8"/></svg>'
+  };
   var hojaIOS = document.createElement('div');
   hojaIOS.className = 'appios'; hojaIOS.hidden = true;
   hojaIOS.innerHTML = '<div class="appios__caja" role="dialog" aria-modal="true" aria-labelledby="appios-t">' +
-    '<h2 id="appios-t">Instalar en tu iPhone o iPad</h2><ol>' +
-    '<li>Toca el botón <span class="flecha">⬆︎ Compartir</span> de Safari (en la barra de abajo o arriba).</li>' +
-    '<li>Desliza y elige <strong>«Añadir a pantalla de inicio»</strong>.</li>' +
-    '<li>Confirma con <strong>«Añadir»</strong>. El icono del hotel aparecerá en tu pantalla.</li></ol>' +
-    '<p style="font-size:.85rem">Tiene que hacerse desde Safari; en otros navegadores de iPhone no aparece esta opción.</p>' +
+    '<h2 id="appios-t">Instala la app en tu ' + (esIPad ? 'iPad' : 'iPhone') + '</h2>' +
+    '<div class="appios__aviso"><span aria-hidden="true">⚠️</span><span>Ábrela en <strong>Safari</strong>. En otros navegadores esta opción no aparece.</span></div>' +
+    '<div class="appios__paso"><span class="appios__num">1</span><span class="appios__icono">' + SVG.compartir + '</span>' +
+      '<span class="appios__txt"><b>Toca «Compartir»</b>' +
+      '<small>El botón del cuadrado con la flecha ↑, ' + (esIPad ? 'arriba a la derecha' : 'en la barra de abajo') + '. ¿No lo ves? Toca antes el botón ' + SVG.mas + ' y luego «Compartir».</small></span></div>' +
+    '<div class="appios__paso"><span class="appios__num">2</span><span class="appios__icono">' + SVG.anadir + '</span>' +
+      '<span class="appios__txt"><b>Elige «Añadir a pantalla de inicio»</b><small>Desliza el menú hacia arriba si no la ves. Tiene el símbolo ＋ dentro de un cuadrado.</small></span></div>' +
+    '<div class="appios__paso"><span class="appios__num">3</span><span class="appios__icono"><img src="iconos/icon-192.png" alt=""></span>' +
+      '<span class="appios__txt"><b>Pulsa «Añadir»</b><small>Arriba a la derecha. ¡Listo! El icono del hotel aparecerá en tu pantalla de inicio.</small></span></div>' +
     '<button type="button" id="appios-cerrar">Entendido</button></div>';
   document.body.appendChild(hojaIOS);
   function abrirIOS() { hojaIOS.hidden = false; }
   hojaIOS.querySelector('#appios-cerrar').addEventListener('click', function () { hojaIOS.hidden = true; });
   hojaIOS.addEventListener('click', function (e) { if (e.target === hojaIOS) hojaIOS.hidden = true; });
+
+  /* ---- Icono de música en el botón de sonido (visible en móvil, donde el texto está oculto) ---- */
+  var botonSonido = document.getElementById('boton-sonido');
+  if (botonSonido) {
+    botonSonido.insertBefore(new DOMParser().parseFromString(
+      '<svg xmlns="http://www.w3.org/2000/svg" class="appicono-musica" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+      'image/svg+xml').documentElement, botonSonido.firstChild);
+    botonSonido.setAttribute('aria-label', 'Activar o silenciar la música');
+  }
 
   /* ---- A3 · Barra de pestañas ---- */
   var ICON = {
