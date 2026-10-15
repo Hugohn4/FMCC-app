@@ -26,6 +26,13 @@
   window.gpaApp = { eventos: function () { try { return JSON.parse(localStorage.getItem('gpa_app_eventos') || '[]'); } catch (e) { return []; } } };
   if (/[?&]origen=app/.test(location.search) || standalone) track('sesion_app');
 
+  /* ---- Marca de cookies visibles (el banner de instalación se oculta mientras tanto) ---- */
+  function marcarCookies() {
+    var c = document.getElementById('aviso-cookies');
+    document.body.classList.toggle('hay-cookies', !!c && !c.hidden && getComputedStyle(c).display !== 'none');
+  }
+  setInterval(marcarCookies, 800);
+
   /* ---- A1 · Service worker ---- */
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
     window.addEventListener('load', function () {
@@ -42,13 +49,17 @@
 
   function mostrarBanner(texto, conBoton) {
     if (standalone || sessionStorage.getItem('gpa_app_oculto')) return;
-    banner.innerHTML = '<p>' + texto + '</p>' + (conBoton ? '<button class="si" type="button">Instalar</button>' : '') +
-      '<button class="no" type="button" aria-label="Cerrar">Ahora no</button>';
+    banner.innerHTML = '<p>' + texto + '</p><div class="appinstalar__botones">' +
+      (conBoton ? '<button class="si" type="button">Instalar</button>' : '<button class="si" type="button" data-ios>Cómo instalar</button>') +
+      '<button class="no" type="button" aria-label="Cerrar">Ahora no</button></div>';
+    var ios = banner.querySelector('[data-ios]');
+    if (ios) ios.onclick = function () { abrirIOS(); track('instalar_ios_pasos'); };
     banner.hidden = false;
     track('instalar_mostrado');
     banner.querySelector('.no').onclick = function () { banner.hidden = true; sessionStorage.setItem('gpa_app_oculto', '1'); };
     var si = banner.querySelector('.si');
     if (si) si.onclick = function () {
+      if (!pedido) { banner.hidden = true; return; }
       banner.hidden = true;
       pedido.prompt();
       pedido.userChoice.then(function (r) { track('instalar_' + r.outcome); pedido = null; });
@@ -64,9 +75,24 @@
   var esIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   if (esIOS && !standalone) {
     setTimeout(function () {
-      mostrarBanner('Para instalar la app: toca <strong>Compartir</strong> y después <strong>Añadir a pantalla de inicio</strong>.', false);
+      mostrarBanner('Instala la app del hotel en tu pantalla de inicio.', false);
     }, 8000);
   }
+
+  /* ---- Pasos para iPhone y iPad (Safari no permite instalar con un botón) ---- */
+  var hojaIOS = document.createElement('div');
+  hojaIOS.className = 'appios'; hojaIOS.hidden = true;
+  hojaIOS.innerHTML = '<div class="appios__caja" role="dialog" aria-modal="true" aria-labelledby="appios-t">' +
+    '<h2 id="appios-t">Instalar en tu iPhone o iPad</h2><ol>' +
+    '<li>Toca el botón <span class="flecha">⬆︎ Compartir</span> de Safari (en la barra de abajo o arriba).</li>' +
+    '<li>Desliza y elige <strong>«Añadir a pantalla de inicio»</strong>.</li>' +
+    '<li>Confirma con <strong>«Añadir»</strong>. El icono del hotel aparecerá en tu pantalla.</li></ol>' +
+    '<p style="font-size:.85rem">Tiene que hacerse desde Safari; en otros navegadores de iPhone no aparece esta opción.</p>' +
+    '<button type="button" id="appios-cerrar">Entendido</button></div>';
+  document.body.appendChild(hojaIOS);
+  function abrirIOS() { hojaIOS.hidden = false; }
+  hojaIOS.querySelector('#appios-cerrar').addEventListener('click', function () { hojaIOS.hidden = true; });
+  hojaIOS.addEventListener('click', function (e) { if (e.target === hojaIOS) hojaIOS.hidden = true; });
 
   /* ---- A3 · Barra de pestañas ---- */
   var ICON = {

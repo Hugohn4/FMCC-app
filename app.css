@@ -77,3 +77,57 @@
 .asistente__voz.escuchando { color: #fff; background: var(--alerta, #B4432F); animation: appPulso 1.1s infinite; }
 @keyframes appPulso { 50% { opacity: 0.55; } }
 @media (prefers-reduced-motion: reduce) { .asistente__voz.escuchando { animation: none; } }
+
+/* ==========================================================================
+   CORRECCIONES v2 (Actividad 2)
+   1) Cookies en móvil: botones apilados, sin cortes.
+   2) Banner de instalación: por encima de la barra, sin tapar cookies ni botones.
+   3) Ajustes para tablet y ordenador.
+   ========================================================================== */
+
+/* 1) Cookies: en móvil, los botones ocupan todo el ancho y se apilan */
+@media (max-width: 44rem) {
+  .cookies { padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom, 0px)); }
+  .cookies__texto { font-size: 0.85rem; line-height: 1.45; }
+  .cookies__texto strong { font-size: 1rem; }
+  .cookies__acciones { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; width: 100%; }
+  .cookies__acciones .boton { width: 100%; min-width: 0; padding-inline: 0.5rem; font-size: 0.8rem; min-height: 44px; white-space: normal; }
+  .cookies__acciones .boton--solido { grid-column: 1 / -1; order: -1; }
+}
+
+/* 2) Banner de instalación: siempre visible, por encima de la barra y sin solaparse */
+.appinstalar {
+  z-index: 85;
+  flex-wrap: wrap;
+  max-height: 60svh; overflow: auto;
+}
+.appinstalar p { flex: 1 1 12rem; }
+.appinstalar__botones { display: flex; gap: 0.5rem; width: 100%; justify-content: flex-end; }
+@media (max-width: 60rem) {
+  /* Justo encima de la barra inferior de la app */
+  .appinstalar { bottom: calc(4.6rem + env(safe-area-inset-bottom, 0px)); }
+}
+/* Mientras el banner de cookies está visible, el de instalación se oculta */
+body.hay-cookies .appinstalar { display: none; }
+
+/* Pasos de instalación en iPhone y iPad */
+.appios { position: fixed; inset: 0; z-index: 95; display: flex; align-items: flex-end; justify-content: center; background: rgba(6, 39, 51, 0.6); }
+.appios[hidden] { display: none; }
+.appios__caja { width: min(30rem, 100%); box-sizing: border-box; padding: 1.3rem 1.3rem calc(1.3rem + env(safe-area-inset-bottom, 0px)); background: var(--arena, #F5F2EC); color: var(--abismo, #062733); border-radius: 20px 20px 0 0; font: 400 0.98rem/1.5 var(--grotesca, sans-serif); }
+.appios h2 { margin: 0 0 0.6rem; font: 1.4rem var(--romana, serif); }
+.appios ol { padding-left: 1.2rem; margin: 0 0 1rem; }
+.appios li { margin: 0.4rem 0; }
+.appios .flecha { display: inline-block; font-weight: 700; }
+.appios button { width: 100%; min-height: 44px; border: 0; border-radius: 999px; background: var(--oceano, #0C3E50); color: #fff; font: 600 0.95rem var(--grotesca, sans-serif); cursor: pointer; }
+@media (min-width: 40rem) { .appios { align-items: center; } .appios__caja { border-radius: 20px; } }
+
+/* 3) Tablet y ordenador */
+@media (min-width: 45rem) and (max-width: 60rem) {
+  /* Tablet en vertical: barra inferior más ancha y banner centrado */
+  .appbar { padding-inline: 12vw; }
+  .appinstalar { width: min(34rem, calc(100% - 3rem)); }
+}
+@media (min-width: 60.01rem) {
+  /* Ordenador e iPad en horizontal: sin barra inferior, banner en la esquina */
+  .appinstalar { left: auto; right: var(--hueco, 1.5rem); transform: none; bottom: calc(var(--hueco, 1.5rem)); width: min(24rem, calc(100% - 3rem)); }
+}
