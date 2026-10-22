@@ -4211,8 +4211,31 @@
         }
 
         // PENDIENTE: punto de integración con el motor de reservas.
-        aviso.textContent = 'Hay disponibilidad. Te confirmamos en ' + correo.value + '.';
-        aviso.classList.add('is-correcto');
+        var botonEnvio = formulario.querySelector('button[type="submit"]');
+var noches = Math.round((new Date(salida.value) - new Date(entrada.value)) / MS_DIA);
+var total = Math.round(parseInt(habitacion.value, 10) * parseFloat(regimen.value) * noches);
+
+botonEnvio.disabled = true;
+aviso.textContent = 'Enviando…';
+
+emailjs.send('service_gloria', 'template_7dhfdcp', {
+  to_email: correo.value,
+  entrada: entrada.value,
+  salida: salida.value,
+  habitacion: habitacion.options[habitacion.selectedIndex].text,
+  huespedes: huespedes.value,
+  regimen: regimen.options[regimen.selectedIndex].text,
+  total: total,
+  enlace_baja: 'https://hugohn4.github.io/FMCC-app/email/baja.html'
+}).then(function () {
+  aviso.textContent = 'Consulta enviada. Te hemos escrito a ' + correo.value + '.';
+  aviso.classList.add('is-correcto');
+  formulario.reset();
+}).catch(function () {
+  aviso.textContent = 'No se pudo enviar. Inténtalo de nuevo o llama al 928 12 85 10.';
+}).finally(function () {
+  botonEnvio.disabled = false;
+});
       });
     })();
 
@@ -4923,6 +4946,8 @@
     
   </script>
   <!-- ACTIVIDAD 2 · capa web-app -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init({ publicKey: 'SIDUwr7Nts_RT1Fqe' });</script>
   <script src="app.js" defer></script>
 </body>
 
