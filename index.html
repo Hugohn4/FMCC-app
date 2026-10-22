@@ -76,7 +76,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <!-- Canónica: evita que varias URL con el mismo contenido compitan. -->
-  <link rel="canonical" href="https://www.gloriapalaceth.com/gloria-palace-amadores-thalasso-hotel/">
+  <link rel="canonical" href="https://hugohn4.github.io/FMCC-app/">
 
   <!-- Open Graph y Twitter Card: cómo se ve el enlace al compartirlo. -->
   <meta property="og:type" content="website">
@@ -85,13 +85,13 @@
   <meta property="og:title" content="Gloria Palace Amadores Thalasso &amp; Hotel 4*">
   <meta property="og:description"
     content="Sobre el acantilado, entre Puerto Rico y Playa de Amadores. Dos piscinas con vistas al Atlántico y 1.800 m² de talasoterapia.">
-  <meta property="og:url" content="https://www.gloriapalaceth.com/gloria-palace-amadores-thalasso-hotel/">
-  <meta property="og:image" content="img/og-amadores.jpg">
+  <meta property="og:url" content="https://hugohn4.github.io/FMCC-app/">
+  <meta property="og:image" content="https://hugohn4.github.io/FMCC-app/fotos/Galeria10.jpg">
   <meta property="og:image:alt" content="Piscina infinita del Gloria Palace Amadores sobre el Atlántico">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Gloria Palace Amadores Thalasso &amp; Hotel 4*">
   <meta name="twitter:description" content="Sobre el acantilado, entre Puerto Rico y Playa de Amadores.">
-  <meta name="twitter:image" content="img/og-amadores.jpg">
+  <meta name="twitter:image" content="https://hugohn4.github.io/FMCC-app/fotos/Galeria10.jpg">
 
   <!-- Tipografías.
        Marcellus -> titulares: romana clásica, de piedra tallada.
@@ -129,8 +129,8 @@
       { "@type": "LocationFeatureSpecification", "name": "Accesible para sillas de ruedas", "value": true }
     ],
     "sameAs": [
-      "https://www.facebook.com/GloriaThalassoHotels",
-      "https://instagram.com/gloriathalassohotels/"
+      "https://www.facebook.com/GloriaThalassoHotels/",
+      "https://www.instagram.com/gloriathalassohotels/"
     ]
   }
   </script>
@@ -2551,6 +2551,98 @@
     .galeria__marco {
       aspect-ratio: 1024 / 683;
     }
+    /* ====================================================================
+   MÓDULO 21 — REDES SOCIALES
+   ==================================================================== */
+.seccion--redes {
+  background: var(--arena);
+}
+
+.seccion--redes .titular {
+  margin-bottom: 1.2rem;
+}
+
+.redes__entrada {
+  color: var(--risco);
+  margin-bottom: clamp(2rem, 5vh, 3rem);
+}
+
+.redes__lista {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--hueco);
+}
+
+.red {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.6rem;
+  background: #fff;
+  border: 1px solid rgba(138, 123, 108, 0.25);
+  text-decoration: none;
+  transition: border-color var(--suave), transform var(--suave), box-shadow var(--suave);
+}
+
+.red:hover {
+  border-color: var(--turquesa);
+  transform: translateY(-3px);
+  box-shadow: var(--sombra);
+}
+
+.red__icono {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  padding: 12px;
+  border-radius: 50%;
+  background: var(--oceano);
+  color: var(--arena);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: background-color var(--suave);
+}
+
+.red:hover .red__icono {
+  background: var(--turquesa);
+}
+
+.red__nombre {
+  display: block;
+  font-family: var(--romana);
+  font-size: var(--t-m);
+  line-height: 1.2;
+}
+
+.red__usuario {
+  display: block;
+  font-size: var(--t-xs);
+  letter-spacing: 0.06em;
+  color: var(--risco);
+}
+
+.redes__compartir {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem 1.2rem;
+  margin-top: clamp(2rem, 5vh, 3rem);
+}
+
+.redes__aviso {
+  margin: 0;
+  font-size: var(--t-xs);
+  color: var(--turquesa);
+}
+
+@media (max-width: 44rem) {
+  .redes__lista {
+    grid-template-columns: 1fr;
+  }
+}
   </style>
   <link rel="stylesheet" href="app.css">
 </head>
@@ -2697,7 +2789,7 @@
 
         <!-- Imagen: guarda tu foto en la misma carpeta que este archivo con el
              nombre imagen-hotel.jpg (o cambia el src). -->
-        <figure class="marco-imagen marco-imagen--hotel" data-archivo="fotos/.jpg">
+        <figure class="marco-imagen marco-imagen--hotel" data-archivo="fotos/HotelporFuera.jpg">
           <img src="fotos/HotelporFuera.jpg" alt="El Gloria Palace Amadores sobre el acantilado" width="800" height="1000"
             loading="lazy" decoding="async" onload="this.parentNode.classList.add('tiene-imagen')"
             onerror="this.hidden=true">
@@ -3070,6 +3162,58 @@
         </li>
       </ul>
     </section>
+        <!-- ==================================================================
+         MÓDULO I — REDES SOCIALES
+         Enlaces externos con rel="noopener noreferrer". El botón de
+         compartir usa la Web Share API (móvil/iPad) y, si no existe,
+         copia la dirección de la página. Ver MÓDULO S10.
+         ================================================================== -->
+    <section class="seccion seccion--redes" id="redes">
+      <p class="seccion__indice">Redes sociales</p>
+      <h2 class="titular">Síguenos y comparte tu estancia.</h2>
+      <p class="redes__entrada">
+        Fotos, novedades del talaso y ofertas del hotel. Etiquétanos en tus
+        publicaciones y te leemos.
+      </p>
+
+      <ul class="redes__lista">
+        <li>
+          <a class="red" href="https://www.facebook.com/GloriaThalassoHotels/"
+            target="_blank" rel="noopener noreferrer"
+            aria-label="Facebook de Gloria Thalasso Hotels (se abre en una pestaña nueva)">
+            <svg class="red__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M14 8h2.5V4.5H14A3.5 3.5 0 0 0 10.5 8v2.5H8V14h2.5v6H14v-6h2.3l.6-3.5H14V8.7c0-.4.3-.7.7-.7z" />
+            </svg>
+            <span>
+              <span class="red__nombre">Facebook</span>
+              <span class="red__usuario">@GloriaThalassoHotels</span>
+            </span>
+          </a>
+        </li>
+        <li>
+          <a class="red" href="https://www.instagram.com/gloriathalassohotels/"
+            target="_blank" rel="noopener noreferrer"
+            aria-label="Instagram de Gloria Thalasso Hotels (se abre en una pestaña nueva)">
+            <svg class="red__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <rect x="4" y="4" width="16" height="16" rx="4.5" />
+              <circle cx="12" cy="12" r="3.6" />
+              <circle cx="16.8" cy="7.2" r="0.6" />
+            </svg>
+            <span>
+              <span class="red__nombre">Instagram</span>
+              <span class="red__usuario">@gloriathalassohotels</span>
+            </span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="redes__compartir">
+        <button class="boton boton--solido boton--menudo" type="button" id="boton-compartir">
+          Compartir esta página
+        </button>
+        <p class="redes__aviso" id="aviso-compartir" role="status"></p>
+      </div>
+    </section>
 
   </main>
 
@@ -3106,6 +3250,7 @@
       <a href="#reserva">Reservar</a>
       <a href="mailto:info.amadores@gloriapalaceth.com">info.amadores@gloriapalaceth.com</a>
       <a href="tel:+34928128510">928 12 85 10</a>
+      <a href="#redes">Redes sociales</a>
     </nav>
 
     <p class="pie__legal">
@@ -4344,14 +4489,16 @@
         return mejor;
       }
 
-      function escribir(texto, quien) {
-        var burbuja = document.createElement('div');
-        burbuja.className = 'mensaje mensaje--' + quien;
-        burbuja.innerHTML = '<p>' + texto + '</p>';
-        hilo.appendChild(burbuja);
-        hilo.scrollTop = hilo.scrollHeight;
-        return burbuja;
-      }
+      function escribir(texto, quien, esHtml) {
+  var burbuja = document.createElement('div');
+  burbuja.className = 'mensaje mensaje--' + quien;
+  var p = document.createElement('p');
+  if (esHtml) { p.innerHTML = texto; } else { p.textContent = texto; }
+  burbuja.appendChild(p);
+  hilo.appendChild(burbuja);
+  hilo.scrollTop = hilo.scrollHeight;
+  return burbuja;
+}
 
       /** Acciones que el asistente puede ejecutar además de contestar. */
       function ejecutar(accion) {
@@ -4379,16 +4526,16 @@
         // Pequeña pausa: una respuesta instantánea parece un error.
         window.setTimeout(function () {
           if (!intencion) {
-            escribir(NO_ENTIENDO, 'hotel');
+            escribir(NO_ENTIENDO, 'hotel', true);
             return;
           }
-          escribir(intencion.respuesta, 'hotel');
+          escribir(intencion.respuesta, 'hotel',true);
           if (intencion.accion) ejecutar(intencion.accion);
         }, 380);
       }
 
       function preguntar(texto) {
-        escribir(texto, 'visitante');
+        escribir(texto, 'visitante', false);
         responder(texto);
       }
 
@@ -4409,7 +4556,7 @@
         boton.setAttribute('aria-expanded', String(mostrar));
 
         if (mostrar) {
-          if (!hilo.children.length) escribir(BIENVENIDA, 'hotel');
+          if (!hilo.children.length) escribir(BIENVENIDA, 'hotel', true);
           entrada.focus();
         } else {
           boton.focus();
@@ -4736,6 +4883,44 @@
       window.addEventListener('resize', pedir);
       pintar();
     })();
+
+        /* ====================================================================
+       MÓDULO S10 — COMPARTIR
+       Web Share API donde existe (Android, iOS, iPadOS). En escritorio,
+       sin soporte, copia la dirección al portapapeles. El usuario siempre
+       elige él mismo la red: no se envía nada automáticamente.
+       ==================================================================== */
+    (function () {
+      'use strict';
+      var boton = document.getElementById('boton-compartir');
+      var aviso = document.getElementById('aviso-compartir');
+      if (!boton) return;
+
+      function decir(texto) {
+        aviso.textContent = texto;
+        window.setTimeout(function () { aviso.textContent = ''; }, 3500);
+      }
+
+      boton.addEventListener('click', function () {
+        var datos = {
+          title: document.title,
+          text: 'Gloria Palace Amadores Thalasso & Hotel, sobre el acantilado de Mogán.',
+          url: location.href.split('#')[0]
+        };
+
+        if (navigator.share) {
+          navigator.share(datos).catch(function () { /* el usuario canceló */ });
+        } else if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(datos.url).then(
+            function () { decir('Enlace copiado.'); },
+            function () { decir('No se pudo copiar. Copia la dirección del navegador.'); }
+          );
+        } else {
+          decir('Copia la dirección del navegador para compartirla.');
+        }
+      });
+    })();
+    
   </script>
   <!-- ACTIVIDAD 2 · capa web-app -->
   <script src="app.js" defer></script>
