@@ -26,20 +26,19 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const supabase = window.supabase.createClient('https://bsyoxosjqwfztldzqzer.supabase.co', 'sb_publishable_a9uYKXOQ1W6eIPY9hwtxFw_bKWjYaUj');
+    // Cambiamos el nombre a "clienteLogin" para evitar el choque
+    const clienteLogin = window.supabase.createClient('https://bsyoxosjqwfztldzqzer.supabase.co', 'sb_publishable_a9uYKXOQ1W6eIPY9hwtxFw_bKWjYaUj');
 
     document.getElementById('form-login').addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      // Capturamos la contraseña que ha puesto el usuario
       const password = document.getElementById('pass').value;
-      
-      // Aquí está el truco: usamos un correo fantasma fijo por detrás
       const emailOculto = 'admin@gloriapalace.com'; 
       
       document.getElementById('error-msg').textContent = "Comprobando...";
 
-      const { data, error } = await supabase.auth.signInWithPassword({ 
+      // Usamos clienteLogin en lugar de supabase
+      const { data, error } = await clienteLogin.auth.signInWithPassword({ 
         email: emailOculto, 
         password: password 
       });
@@ -47,7 +46,7 @@
       if (error) {
         document.getElementById('error-msg').textContent = "Contraseña incorrecta.";
       } else {
-        window.location.href = 'panel.html'; // Puerta abierta
+        window.location.href = 'panel.html'; 
       }
     });
   </script>
