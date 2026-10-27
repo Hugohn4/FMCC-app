@@ -10,6 +10,7 @@
   input[type=email]{width:100%;box-sizing:border-box;padding:.75rem;border:1px solid #8A7B6C;border-radius:10px;font:inherit}
   fieldset{border:0;padding:0;margin:.9rem 0}
   button{width:100%;min-height:46px;border:0;border-radius:999px;background:#0C3E50;color:#fff;font-weight:600;font-size:1rem;font-family:inherit;cursor:pointer;margin-top:.6rem}
+  button:disabled{opacity:.6;cursor:default}
   a{color:#0C3E50}.ok{background:#CFE7EA;border-radius:12px;padding:1rem}
 </style></head>
 <body><main>
@@ -27,18 +28,35 @@
   </form>
   <p class="ok" id="ok" hidden role="status"></p>
   <p><a href="../index.html">Volver a la web del hotel</a></p>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init({ publicKey: 'SIDUwr7Nts_RT1Fqe' });</script>
 <script>
-  /* DEMOSTRACIÓN. Esta página no guarda nada: en un envío real, el formulario haría un POST a un
-     servidor (o a la plataforma de email) que marca el contacto como "baja" y deja de enviarle
-     campañas. La baja debe procesarse como máximo en 10 días laborables (guía de la AEPD/LSSI);
-     aquí se confirma al instante. */
   var p = new URLSearchParams(location.search).get('email');
   if (p && p.indexOf('{{') === -1) document.getElementById('email').value = p;
+
   document.getElementById('f').addEventListener('submit', function (e) {
     e.preventDefault();
+    var form = this;
+    var correo = document.getElementById('email').value.trim();
+    var motivoEl = form.querySelector('input[name="motivo"]:checked');
+    var boton = form.querySelector('button[type="submit"]');
     var m = document.getElementById('ok');
-    m.textContent = 'Listo. Hemos dado de baja ' + document.getElementById('email').value + '. Ya no recibirás más mensajes comerciales del hotel.';
-    m.hidden = false; this.hidden = true;
+
+    boton.disabled = true;
+
+    emailjs.send('service_gloria', 'template_74k109e', {
+      to_email: correo,
+      motivo: motivoEl ? motivoEl.value : 'no indicado',
+      fecha: new Date().toLocaleDateString('es-ES')
+    }).then(function () {
+      m.textContent = 'Listo. Hemos dado de baja ' + correo + '. Ya no recibirás más mensajes comerciales del hotel.';
+      m.hidden = false;
+      form.hidden = true;
+    }).catch(function () {
+      boton.disabled = false;
+      m.textContent = 'No se pudo procesar la baja. Inténtalo de nuevo o escribe a lopd@gloriapalaceth.com.';
+      m.hidden = false;
+    });
   });
 </script>
 </main></body></html>
