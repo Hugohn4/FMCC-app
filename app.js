@@ -219,3 +219,88 @@
     });
   }
 })();
+/* ============================================================================
+   MÓDULO DE BASE DE DATOS (Supabase) - Catálogo y Reservas
+   ============================================================================ */
+(function () {
+  'use strict';
+
+  // 1. INICIALIZAR SUPABASE (Sustituye por tus datos reales de Supabase)
+  var SUPABASE_URL = 'https://TUPROYECTO.supabase.co'; 
+  var SUPABASE_KEY = 'TU_CLAVE_ANON_PUBLIC_AQUI'; 
+  
+  if (!window.supabase) return; // Si no carga la librería, no hacemos nada
+  var clienteSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // 2. CARGAR HABITACIONES DESDE LA BASE DE DATOS
+  var catalogo = document.getElementById('catalogo-habitaciones'); // Asegúrate de tener este id en tu HTML
+  var plantilla = document.getElementById('plantilla-habitacion'); 
+  
+  async function cargarHabitaciones() {
+    if (!catalogo || !plantilla) return;
+
+    var { data: habitaciones, error } = await clienteSupabase.from('habitaciones').select('*');
+    
+    if (error) {
+      catalogo.innerHTML = '<p>Error al cargar las habitaciones.</p>';
+      return;
+    }
+
+    catalogo.innerHTML = ''; // Limpiamos el texto de carga
+
+    habitaciones.forEach(function (hab) {
+      var tarjeta = plantilla.content.cloneNode(true);
+      tarjeta.querySelector('.nombre-habitacion').textContent = hab.nombre;
+      tarjeta.querySelector('.precio-habitacion').textContent = hab.precio_noche + ' € / noche';
+      tarjeta.querySelector('.desc-habitacion').textContent = hab.descripcion;
+      
+      // Guardar el id de la habitación en el botón para saber cuál reservan
+      var boton = tarjeta.querySelector('.btn-reservar');
+      if (boton) boton.dataset.id = hab.id;
+      
+      catalogo.appendChild(tarjeta);
+    });
+  }
+
+  // Ejecutar al cargar la página
+  document.addEventListener('DOMContentLoaded', cargarHabitaciones);
+
+  // 3. GUARDAR RESERVA EN LA BASE DE DATOS
+  var formularioReserva = document.getElementById('formulario-reserva');
+  var aviso = document.getElementById('aviso-reserva');
+
+  if (formularioReserva) {
+    formularioReserva.addEventListener('submit', async function (evento) {
+      evento.preventDefault(); // Evitamos que la página se recargue
+
+      var entrada = document.getElementById('entrada').value;
+      var salida = document.getElementById('salida').value;
+      var huespedes = document.getElementById('huespedes').value;
+      var correo = document.getElementById('correo').value;
+      var botonEnvio = formularioReserva.querySelector('button[type="submit"]');
+
+      botonEnvio.disabled = true;
+      if (aviso) aviso.textContent = 'Procesando reserva...';
+
+      // Insertar en la tabla 'reservas' de Supabase
+      var { error } = await clienteSupabase.from('reservas').insert([
+        {
+          fecha_entrada: entrada,
+          fecha_salida: salida,
+          huespedes: parseInt(huespedes, 10),
+          correo: correo,
+          estado: 'confirmada'
+        }
+      ]);
+
+      botonEnvio.disabled = false;
+
+      if (error) {
+        if (aviso) aviso.textContent = 'Error al guardar la reserva: ' + error.message;
+      } else {
+        if (aviso) aviso.textContent = '¡Reserva completada con éxito!';
+        formularioReserva.reset();
+      }
+    });
+  }
+})();
