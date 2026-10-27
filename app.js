@@ -226,7 +226,7 @@
   'use strict';
 
   // 1. INICIALIZAR SUPABASE
-  var SUPABASE_URL = 'bsyoxosjqwfztldzqzer'; // <-- PON TU PROJECT URL
+  var SUPABASE_URL = 'https://bsyoxosjqwfztldzqzer.supabase.co'; // <-- PON TU PROJECT URL
   var SUPABASE_KEY = 'sb_publishable_a9uYKXOQ1W6eIPY9hwtxFw_bKWjYaUj'; // <-- PON TU ANON PUBLIC KEY
   
   if (!window.supabase) return;
