@@ -38,19 +38,26 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const SUPABASE_URL = 'https://bsyoxosjqwfztldzqzer.supabase.co'; // <-- PON TU URL
-    const SUPABASE_KEY = 'sb_publishable_a9uYKXOQ1W6eIPY9hwtxFw_bKWjYaUj'; // <-- PON TU KEY
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const SUPABASE_URL = 'https://bsyoxosjqwfztldzqzer.supabase.co'; 
+    const SUPABASE_KEY = 'sb_publishable_a9uYKXOQ1W6eIPY9hwtxFw_bKWjYaUj'; 
+    
+    // Cambiamos el nombre a "clientePanel" para evitar el choque de variables
+    const clientePanel = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     async function cargarReservas() {
-      const { data, error } = await supabase.from('reservas').select('*').order('fecha_entrada', { ascending: true });
+      const { data, error } = await clientePanel.from('reservas').select('*').order('fecha_entrada', { ascending: true });
       const tbody = document.getElementById('tabla-reservas');
       
       if (error) {
-        tbody.innerHTML = '<tr><td colspan="6">Error al cargar las reservas.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6">Error al conectar. Verifica tu conexión.</td></tr>';
         return;
       }
       
+      if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No hay reservas todavía.</td></tr>';
+        return;
+      }
+
       tbody.innerHTML = '';
       data.forEach(reserva => {
         tbody.innerHTML += `
@@ -66,7 +73,6 @@
       });
     }
 
-    // Cargar al inicio
     cargarReservas();
   </script>
 </body>
