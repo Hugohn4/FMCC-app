@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Reservas</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f4f7f6; padding: 20px; color: #333; }
+    .contenedor { max-width: 1000px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    h1 { color: #004d73; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; text-align: left; }
+    th, td { padding: 12px; border-bottom: 1px solid #ddd; }
+    th { background-color: #004d73; color: white; }
+    tr:hover { background-color: #f1f1f1; }
+    .estado { padding: 4px 8px; border-radius: 4px; background: #d4edda; color: #155724; font-size: 0.9em; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <div class="contenedor">
+    <h1>Administración de Reservas</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha Entrada</th>
+          <th>Fecha Salida</th>
+          <th>Habitación</th>
+          <th>Huéspedes</th>
+          <th>Correo</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-reservas">
+        <tr><td colspan="6">Cargando datos en tiempo real...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'TU_URL_AQUI'; // <-- PON TU URL
+    const SUPABASE_KEY = 'TU_KEY_AQUI'; // <-- PON TU KEY
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function cargarReservas() {
+      const { data, error } = await supabase.from('reservas').select('*').order('fecha_entrada', { ascending: true });
+      const tbody = document.getElementById('tabla-reservas');
+      
+      if (error) {
+        tbody.innerHTML = '<tr><td colspan="6">Error al cargar las reservas.</td></tr>';
+        return;
+      }
+      
+      tbody.innerHTML = '';
+      data.forEach(reserva => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${reserva.fecha_entrada || '-'}</td>
+            <td>${reserva.fecha_salida || '-'}</td>
+            <td>${reserva.tipo_habitacion || 'No especificada'}</td>
+            <td>${reserva.huespedes || '-'}</td>
+            <td>${reserva.correo || '-'}</td>
+            <td><span class="estado">${reserva.estado || 'OK'}</span></td>
+          </tr>
+        `;
+      });
+    }
+
+    // Cargar al inicio
+    cargarReservas();
+  </script>
+</body>
+</html>
