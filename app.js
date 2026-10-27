@@ -226,8 +226,8 @@
   'use strict';
 
   // 1. INICIALIZAR SUPABASE (Sustituye por tus datos reales de Supabase)
-  var SUPABASE_URL = 'https://TUPROYECTO.supabase.co'; 
-  var SUPABASE_KEY = 'TU_CLAVE_ANON_PUBLIC_AQUI'; 
+  var SUPABASE_URL = 'bsyoxosjqwfztldzqzer'; 
+  var SUPABASE_KEY = 'sb_publishable_a9uYKXOQ1W6eIPY9hwtxFw_bKWjYaUj'; 
   
   if (!window.supabase) return; // Si no carga la librería, no hacemos nada
   var clienteSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
