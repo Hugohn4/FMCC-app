@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Acceso Privado</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #004d73; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+    .caja { background: white; padding: 40px 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); text-align: center; width: 300px; }
+    h2 { margin-top: 0; color: #333; }
+    input { width: 90%; padding: 12px; margin: 15px 0; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; text-align: center; }
+    button { background: #d49a37; color: white; border: none; padding: 12px; width: 100%; cursor: pointer; font-weight: bold; border-radius: 4px; font-size: 16px; transition: 0.3s; }
+    button:hover { background: #b5822c; }
+  </style>
+</head>
+<body>
+  <div class="caja">
+    <h2>Área de Recepción</h2>
+    <p style="color: #666; font-size: 0.9em; margin-bottom: 20px;">Introduce la clave maestra</p>
+    
+    <form id="form-login">
+      <input type="password" id="pass" placeholder="Contraseña..." required>
+      <button type="submit">Entrar al Panel</button>
+      <p id="error-msg" style="color: red; font-size: 0.9em; margin-top: 15px;"></p>
+    </form>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabase = window.supabase.createClient('https://bsyoxosjqwfztldzqzer.supabase.co', 'sb_publishable_a9uYKXOQ1W6eIPY9hwtxFw_bKWjYaUj');
+
+    document.getElementById('form-login').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Capturamos la contraseña que ha puesto el usuario
+      const password = document.getElementById('pass').value;
+      
+      // Aquí está el truco: usamos un correo fantasma fijo por detrás
+      const emailOculto = 'admin@gloriapalace.com'; 
+      
+      document.getElementById('error-msg').textContent = "Comprobando...";
+
+      const { data, error } = await supabase.auth.signInWithPassword({ 
+        email: emailOculto, 
+        password: password 
+      });
+
+      if (error) {
+        document.getElementById('error-msg').textContent = "Contraseña incorrecta.";
+      } else {
+        window.location.href = 'panel.html'; // Puerta abierta
+      }
+    });
+  </script>
+</body>
+</html>
