@@ -2,13 +2,52 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Acceso Privado</title>
   <style>
-    body { font-family: system-ui, sans-serif; background: #004d73; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-    .caja { background: white; padding: 40px 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); text-align: center; width: 300px; }
-    h2 { margin-top: 0; color: #333; }
-    input { width: 90%; padding: 12px; margin: 15px 0; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; text-align: center; }
-    button { background: #d49a37; color: white; border: none; padding: 12px; width: 100%; cursor: pointer; font-weight: bold; border-radius: 4px; font-size: 16px; transition: 0.3s; }
+    body { 
+      font-family: system-ui, sans-serif; 
+      background: #004d73; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      height: 100vh; 
+      margin: 0; 
+      padding: 15px;
+      box-sizing: border-box;
+    }
+    .caja { 
+      background: white; 
+      padding: 30px 20px; 
+      border-radius: 8px; 
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
+      text-align: center; 
+      width: 100%; 
+      max-width: 320px; 
+    }
+    h2 { margin-top: 0; color: #333; font-size: 1.4rem; }
+    input { 
+      width: 100%; 
+      padding: 12px; 
+      margin: 15px 0; 
+      border: 1px solid #ccc; 
+      border-radius: 4px; 
+      font-size: 16px; 
+      text-align: center; 
+      box-sizing: border-box;
+    }
+    button { 
+      background: #d49a37; 
+      color: white; 
+      border: none; 
+      padding: 12px; 
+      width: 100%; 
+      cursor: pointer; 
+      font-weight: bold; 
+      border-radius: 4px; 
+      font-size: 16px; 
+      transition: 0.3s; 
+    }
     button:hover { background: #b5822c; }
   </style>
 </head>
@@ -26,18 +65,15 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // Cambiamos el nombre a "clienteLogin" para evitar el choque
     const clienteLogin = window.supabase.createClient('https://bsyoxosjqwfztldzqzer.supabase.co', 'sb_publishable_a9uYKXOQ1W6eIPY9hwtxFw_bKWjYaUj');
 
     document.getElementById('form-login').addEventListener('submit', async (e) => {
       e.preventDefault();
-      
       const password = document.getElementById('pass').value;
       const emailOculto = 'admin@gloriapalace.com'; 
       
       document.getElementById('error-msg').textContent = "Comprobando...";
 
-      // Usamos clienteLogin en lugar de supabase
       const { data, error } = await clienteLogin.auth.signInWithPassword({ 
         email: emailOculto, 
         password: password 
