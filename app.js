@@ -283,6 +283,10 @@
       var huespedes = document.getElementById('huespedes').value;
       var correo = document.getElementById('correo').value;
       
+      // Capturar el nombre de la habitación elegida en el desplegable
+      var selectHabitacion = document.getElementById('habitacion');
+      var nombreHab = selectHabitacion.options[selectHabitacion.selectedIndex].text;
+      
       // Guardar en Supabase sin interrumpir tu envío de EmailJS
       await clienteSupabase.from('reservas').insert([
         {
@@ -290,9 +294,45 @@
           fecha_salida: salida,
           huespedes: parseInt(huespedes, 10) || 2,
           correo: correo,
-          estado: 'confirmada'
+          estado: 'confirmada',
+          tipo_habitacion: nombreHab
         }
       ]);
     });
   }
+
+  // 4. REGISTRO DE USUARIOS (Supabase Auth)
+  var formRegistro = document.getElementById('formulario-registro');
+  
+  if (formRegistro) {
+    formRegistro.addEventListener('submit', async function (evento) {
+      evento.preventDefault(); 
+      
+      var email = document.getElementById('email-reg').value;
+      var password = document.getElementById('pass-reg').value;
+      var aviso = document.getElementById('aviso-registro');
+
+      var boton = formRegistro.querySelector('button');
+      boton.disabled = true;
+      aviso.textContent = 'Creando cuenta...';
+
+      // Enviar datos de registro a Supabase
+      var { data, error } = await clienteSupabase.auth.signUp({
+        email: email,
+        password: password
+      });
+
+      boton.disabled = false;
+
+      if (error) {
+        aviso.textContent = 'Error: ' + error.message;
+        aviso.style.color = 'red';
+      } else {
+        aviso.textContent = '¡Cuenta creada con éxito! Ya estás registrado.';
+        aviso.style.color = 'green';
+        formRegistro.reset();
+      }
+    });
+  }
+
 })();
