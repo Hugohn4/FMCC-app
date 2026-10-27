@@ -2926,81 +2926,28 @@
         </div>
       </div>
 
+      <!-- Contenedor vacío donde Supabase meterá los datos -->
       <ul class="carrusel" id="carrusel-habitaciones" tabindex="0"
         aria-label="Tipos de habitación, desplazable horizontalmente">
-
-        <li class="carrusel__elemento">
-          <article class="ficha">
-            <figure class="ficha__imagen ficha__imagen--doble marco-imagen" data-archivo="habitacion-doble-vista-mar.jpg">
-              <img src="fotos/DobleVistaMar.jpg" alt="Doble Vista Mar: dormitorio con balcón orientado al Atlántico" width="1024" height="683" loading="lazy" decoding="async"
-                onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
-            </figure>
-            <div class="ficha__cuerpo">
-              <h3 class="ficha__nombre">Doble Vista Mar</h3>
-              <p class="ficha__dato">2 huéspedes &nbsp; Balcón &nbsp; Vistas al Atlántico</p>
-              <p class="ficha__texto">
-                La habitación base del hotel, pensada para el descanso junto al
-                mar. Balcón amueblado, aire acondicionado y baño completo.
-              </p>
-              <p class="ficha__precio"><span>desde</span> 132 € <span>/ noche</span></p>
-            </div>
-          </article>
-        </li>
-
-        <li class="carrusel__elemento">
-          <article class="ficha">
-            <figure class="ficha__imagen ficha__imagen--thalasso marco-imagen" data-archivo="habitacion-doble-thalasso.jpg">
-              <img src="fotos/DobleThalassoVistaMar.jpg" alt="Doble Thalasso Vista Mar: habitación con acceso al centro de talasoterapia" width="1024" height="683" loading="lazy" decoding="async"
-                onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
-            </figure>
-            <div class="ficha__cuerpo">
-              <h3 class="ficha__nombre">Doble Thalasso Vista Mar</h3>
-              <p class="ficha__dato">2 huéspedes &nbsp; Talaso incluido &nbsp; Balcón</p>
-              <p class="ficha__texto">
-                Misma habitación, con el circuito del Thalasso Gloria incluido en
-                la tarifa durante toda la estancia.
-              </p>
-              <p class="ficha__precio"><span>desde</span> 168 € <span>/ noche</span></p>
-            </div>
-          </article>
-        </li>
-
-        <li class="carrusel__elemento">
-          <article class="ficha">
-            <figure class="ficha__imagen ficha__imagen--familiar marco-imagen" data-archivo="habitacion-suite-familiar.jpg">
-              <img src="fotos/SuiteFamiliarVistaMar.jpg" alt="Suite Familiar Vista Mar: dos ambientes separados con terraza" width="1024" height="683" loading="lazy" decoding="async"
-                onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
-            </figure>
-            <div class="ficha__cuerpo">
-              <h3 class="ficha__nombre">Suite Familiar Vista Mar</h3>
-              <p class="ficha__dato">Hasta 6 huéspedes &nbsp; Dos ambientes</p>
-              <p class="ficha__texto">
-                Dos espacios separados y terraza, para familias que necesitan
-                horarios distintos bajo el mismo techo.
-              </p>
-              <p class="ficha__precio"><span>desde</span> 215 € <span>/ noche</span></p>
-            </div>
-          </article>
-        </li>
-
-        <li class="carrusel__elemento">
-          <article class="ficha">
-            <figure class="ficha__imagen ficha__imagen--premium marco-imagen" data-archivo="habitacion-doble-premium.jpg">
-              <img src="fotos/DoblePremiumPiscinaPrivada.jpg" alt="Doble Premium Vista Mar: terraza con piscina privada sobre el océano" width="1024" height="683" loading="lazy" decoding="async"
-                onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
-            </figure>
-            <div class="ficha__cuerpo">
-              <h3 class="ficha__nombre">Doble Premium Piscina Privada</h3>
-              <p class="ficha__dato">Solo adultos &nbsp; Piscina privada &nbsp; 2 huéspedes</p>
-              <p class="ficha__texto">
-                Terraza con piscina propia asomada al Atlántico. La categoría más
-                reservada del hotel y la que antes se agota.
-              </p>
-              <p class="ficha__precio"><span>desde</span> 295 € <span>/ noche</span></p>
-            </div>
-          </article>
-        </li>
       </ul>
+
+      <!-- PLANTILLA (Mantiene tu diseño CSS intacto) -->
+      <template id="plantilla-habitacion">
+        <li class="carrusel__elemento">
+          <article class="ficha">
+            <figure class="ficha__imagen marco-imagen">
+              <img src="" alt="" loading="lazy" decoding="async"
+                onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
+            </figure>
+            <div class="ficha__cuerpo">
+              <h3 class="ficha__nombre"></h3>
+              <p class="ficha__dato"></p>
+              <p class="ficha__texto"></p>
+              <p class="ficha__precio"><span>desde</span> <strong class="precio-numero"></strong> <span>/ noche</span></p>
+            </div>
+          </article>
+        </li>
+      </template>
 
       <p class="carrusel__posicion" id="posicion-carrusel" aria-live="polite">1 de 4</p>
     </section>
