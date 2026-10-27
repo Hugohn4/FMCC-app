@@ -5,41 +5,54 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel de Reservas</title>
   <style>
-    body { font-family: system-ui, sans-serif; background: #f4f7f6; padding: 20px; color: #333; margin: 0; }
-    .cabecera { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
-    .contenedor { max-width: 1000px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-    h1 { color: #004d73; margin: 0; }
-    .btn-salir { background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
-    table { width: 100%; border-collapse: collapse; text-align: left; }
-    th, td { padding: 12px; border-bottom: 1px solid #ddd; }
+    body { font-family: system-ui, sans-serif; background: #f4f7f6; padding: 15px; color: #333; margin: 0; }
+    .contenedor { max-width: 1000px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .cabecera { display: flex; flex-direction: column; gap: 10px; border-bottom: 2px solid #eee; padding-bottom: 15px; margin-bottom: 20px; }
+    
+    @media (min-width: 600px) {
+      .cabecera { flex-direction: row; justify-content: space-between; align-items: center; }
+      body { padding: 20px; }
+      .contenedor { padding: 30px; }
+    }
+
+    h1 { color: #004d73; margin: 0; font-size: 1.5rem; }
+    .btn-salir { background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; width: fit-content; }
+    
+    /* Contenedor con scroll para que la tabla no rompa el móvil */
+    .tabla-responsive { width: 100%; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; min-width: 600px; }
+    
+    th, td { padding: 12px; border-bottom: 1px solid #ddd; font-size: 0.9em; }
     th { background-color: #004d73; color: white; }
     tr:hover { background-color: #f1f1f1; }
-    .estado { padding: 4px 8px; border-radius: 4px; background: #d4edda; color: #155724; font-size: 0.9em; font-weight: bold; }
+    .estado { padding: 4px 8px; border-radius: 4px; background: #d4edda; color: #155724; font-size: 0.85em; font-weight: bold; }
   </style>
 </head>
 <body>
 
   <div class="contenedor">
     <div class="cabecera">
-      <h1>Administración de Reservas</h1>
+      <h1>Panel de Reservas</h1>
       <button id="btn-cerrar" class="btn-salir">Cerrar Sesión</button>
     </div>
     
-    <table>
-      <thead>
-        <tr>
-          <th>Entrada</th>
-          <th>Salida</th>
-          <th>Habitación</th>
-          <th>Huéspedes</th>
-          <th>Correo del Cliente</th>
-          <th>Estado</th>
-        </tr>
-      </thead>
-      <tbody id="tabla-reservas">
-        <tr><td colspan="6">Comprobando seguridad y cargando datos...</td></tr>
-      </tbody>
-    </table>
+    <div class="tabla-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Entrada</th>
+            <th>Salida</th>
+            <th>Habitación</th>
+            <th>Huéspedes</th>
+            <th>Correo del Cliente</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-reservas">
+          <tr><td colspan="6">Comprobando seguridad y cargando datos...</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -48,20 +61,15 @@
     const SUPABASE_KEY = 'sb_publishable_a9uYKXOQ1W6eIPY9hwtxFw_bKWjYaUj'; 
     const clientePanel = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // --- 1. CANDADO DE SEGURIDAD ---
     async function comprobarAcceso() {
       const { data: { session } } = await clientePanel.auth.getSession();
-      
-      // Si no hay sesión iniciada, patada al login
       if (!session) {
         window.location.href = 'login.html'; 
       } else {
-        // Si todo está ok, cargamos los datos
         cargarReservas(); 
       }
     }
 
-    // --- 2. CARGAR LAS RESERVAS ---
     async function cargarReservas() {
       const { data, error } = await clientePanel.from('reservas').select('*').order('fecha_entrada', { ascending: true });
       const tbody = document.getElementById('tabla-reservas');
@@ -91,13 +99,11 @@
       });
     }
 
-    // --- 3. BOTÓN CERRAR SESIÓN ---
     document.getElementById('btn-cerrar').addEventListener('click', async () => {
       await clientePanel.auth.signOut();
       window.location.href = 'login.html';
     });
 
-    // Arrancamos comprobando la llave
     comprobarAcceso();
   </script>
 </body>
