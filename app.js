@@ -220,87 +220,79 @@
   }
 })();
 /* ============================================================================
-   MÓDULO DE BASE DE DATOS (Supabase) - Catálogo y Reservas
+   MÓDULO DE BASE DE DATOS (Supabase) - Integración final
    ============================================================================ */
 (function () {
   'use strict';
 
-  // 1. INICIALIZAR SUPABASE (Sustituye por tus datos reales de Supabase)
-  var SUPABASE_URL = 'bsyoxosjqwfztldzqzer'; 
-  var SUPABASE_KEY = 'sb_publishable_a9uYKXOQ1W6eIPY9hwtxFw_bKWjYaUj'; 
+  // 1. INICIALIZAR SUPABASE
+  var SUPABASE_URL = 'bsyoxosjqwfztldzqzer'; // <-- PON TU PROJECT URL
+  var SUPABASE_KEY = 'sb_publishable_a9uYKXOQ1W6eIPY9hwtxFw_bKWjYaUj'; // <-- PON TU ANON PUBLIC KEY
   
-  if (!window.supabase) return; // Si no carga la librería, no hacemos nada
+  if (!window.supabase) return;
   var clienteSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  // 2. CARGAR HABITACIONES DESDE LA BASE DE DATOS
-  var catalogo = document.getElementById('catalogo-habitaciones'); // Asegúrate de tener este id en tu HTML
-  var plantilla = document.getElementById('plantilla-habitacion'); 
-  
-  async function cargarHabitaciones() {
-    if (!catalogo || !plantilla) return;
-
+  // 2. DESCARGAR DATOS Y RELLENAR LA WEB
+  async function cargarDatosBaseDatos() {
     var { data: habitaciones, error } = await clienteSupabase.from('habitaciones').select('*');
-    
-    if (error) {
-      catalogo.innerHTML = '<p>Error al cargar las habitaciones.</p>';
-      return;
+    if (error || !habitaciones) return;
+
+    // A) Rellenar el carrusel de fotos
+    var carrusel = document.getElementById('carrusel-habitaciones');
+    var plantilla = document.getElementById('plantilla-habitacion');
+    if (carrusel && plantilla) {
+      carrusel.innerHTML = ''; 
+      habitaciones.forEach(function (hab) {
+        var tarjeta = plantilla.content.cloneNode(true);
+        tarjeta.querySelector('.ficha__nombre').textContent = hab.nombre;
+        tarjeta.querySelector('.ficha__texto').textContent = hab.descripcion;
+        tarjeta.querySelector('.precio-numero').textContent = hab.precio_noche + ' €';
+        tarjeta.querySelector('.ficha__dato').textContent = 'Hasta ' + hab.capacidad + ' huéspedes';
+        
+        var img = tarjeta.querySelector('img');
+        if (img) {
+          img.src = hab.imagen_url || 'fotos/DobleVistaMar.jpg';
+          img.alt = hab.nombre;
+        }
+        carrusel.appendChild(tarjeta);
+      });
     }
 
-    catalogo.innerHTML = ''; // Limpiamos el texto de carga
-
-    habitaciones.forEach(function (hab) {
-      var tarjeta = plantilla.content.cloneNode(true);
-      tarjeta.querySelector('.nombre-habitacion').textContent = hab.nombre;
-      tarjeta.querySelector('.precio-habitacion').textContent = hab.precio_noche + ' € / noche';
-      tarjeta.querySelector('.desc-habitacion').textContent = hab.descripcion;
-      
-      // Guardar el id de la habitación en el botón para saber cuál reservan
-      var boton = tarjeta.querySelector('.btn-reservar');
-      if (boton) boton.dataset.id = hab.id;
-      
-      catalogo.appendChild(tarjeta);
-    });
+    // B) Rellenar el desplegable del formulario de reservas para que coincida con la BD
+    var selectHabitacion = document.getElementById('habitacion');
+    if (selectHabitacion) {
+      selectHabitacion.innerHTML = '';
+      habitaciones.forEach(function (hab) {
+        var option = document.createElement('option');
+        option.value = hab.precio_noche; // Usamos el precio para el cálculo de tu Módulo S3
+        option.textContent = hab.nombre;
+        selectHabitacion.appendChild(option);
+      });
+    }
   }
 
-  // Ejecutar al cargar la página
-  document.addEventListener('DOMContentLoaded', cargarHabitaciones);
+  document.addEventListener('DOMContentLoaded', cargarDatosBaseDatos);
 
-  // 3. GUARDAR RESERVA EN LA BASE DE DATOS
-  var formularioReserva = document.getElementById('formulario-reserva');
-  var aviso = document.getElementById('aviso-reserva');
-
-  if (formularioReserva) {
-    formularioReserva.addEventListener('submit', async function (evento) {
-      evento.preventDefault(); // Evitamos que la página se recargue
-
+  // 3. ENVIAR LA RESERVA A LA BASE DE DATOS
+  var formulario = document.getElementById('formulario-reserva');
+  if (formulario) {
+    formulario.addEventListener('submit', async function (evento) {
+      // Leemos los datos en el instante en que el usuario le da a "Enviar"
       var entrada = document.getElementById('entrada').value;
       var salida = document.getElementById('salida').value;
       var huespedes = document.getElementById('huespedes').value;
       var correo = document.getElementById('correo').value;
-      var botonEnvio = formularioReserva.querySelector('button[type="submit"]');
-
-      botonEnvio.disabled = true;
-      if (aviso) aviso.textContent = 'Procesando reserva...';
-
-      // Insertar en la tabla 'reservas' de Supabase
-      var { error } = await clienteSupabase.from('reservas').insert([
+      
+      // Guardar en Supabase sin interrumpir tu envío de EmailJS
+      await clienteSupabase.from('reservas').insert([
         {
           fecha_entrada: entrada,
           fecha_salida: salida,
-          huespedes: parseInt(huespedes, 10),
+          huespedes: parseInt(huespedes, 10) || 2,
           correo: correo,
           estado: 'confirmada'
         }
       ]);
-
-      botonEnvio.disabled = false;
-
-      if (error) {
-        if (aviso) aviso.textContent = 'Error al guardar la reserva: ' + error.message;
-      } else {
-        if (aviso) aviso.textContent = '¡Reserva completada con éxito!';
-        formularioReserva.reset();
-      }
     });
   }
 })();
